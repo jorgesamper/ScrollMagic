@@ -1,32 +1,15 @@
-// Crea una instancia de ScrollMagic Controller
-var controller = new ScrollMagic.Controller();
-
-// Crea una escena
-var scene = new ScrollMagic.Scene({
-  triggerElement: '.box', // Elemento que dispara la animación
-  triggerHook: 0.8, // A qué punto de la ventana debe ocurrir la animación
-  reverse: false // Si la animación debería revertirse cuando se haga scroll hacia arriba
-})
-.setClassToggle('.box', 'fade-in') // Añade o elimina una clase cuando se active la escena
-.addTo(controller); // Agrega la escena al controller
-
-
-
 var BackgroundTitleScrollAnimation = (function() {
   
-    // vars
+    // Variables
     var smController = new ScrollMagic.Controller();
-    
-    // selector
-    var backgroundParts = $('.background__part'),
-        backgroundTitles = $('.background__title');
+    var backgroundParts = $('.background__part');
+    var backgroundTitles = $('.background__title');
     
     
+    // Inicialización de las escenas
     _initScenes();
     
-    
-    ///////////// LOGIC
-    
+    // Lógica de las escenas
     function _initScenes() {
       
         $('.js-trigger').each(function(index, item) {
@@ -45,6 +28,7 @@ var BackgroundTitleScrollAnimation = (function() {
       
     }
     
+    // Eventos de las escenas
     function _bindSceneEvents(scene) {
       scene.on("start", function (event) {
         var target = $(event.target.triggerElement());
@@ -53,6 +37,7 @@ var BackgroundTitleScrollAnimation = (function() {
       });
     }
     
+    // Obtener instancia de la línea de tiempo
     function _getTimelineInstance() {
       return new TimelineLite()
         .to(backgroundParts[0], 0.25, { x: '-16px', opacity: 0 })
@@ -61,6 +46,7 @@ var BackgroundTitleScrollAnimation = (function() {
         .to(backgroundParts[1], 0.25, { x: '0px', opacity: 1 }, '-=0.25');
     }
     
+    // Establecer el título de la sección
     function _setSectionTitle(sectionTarget, direction) {
       var sectionSelector = direction !== 'REVERSE' 
             ? sectionTarget 
@@ -68,9 +54,11 @@ var BackgroundTitleScrollAnimation = (function() {
       
       var title = sectionSelector.data('title');
       
-      setTimeout(function() {
-        backgroundTitles.text(title);
-      }, 260);
+      var tl = new TimelineLite();
+      tl.to(backgroundTitles[0], 0.5, { text: title });
+      
+      // Reiniciar la animación de los títulos de fondo
+      tl.restart();
     }
     
-  })();
+})();
